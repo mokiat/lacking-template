@@ -6,9 +6,12 @@ import (
 	"fmt"
 
 	nativeapp "github.com/mokiat/lacking-native/app"
+	nativegame "github.com/mokiat/lacking-native/game"
 	nativeui "github.com/mokiat/lacking-native/ui"
 	gameui "github.com/mokiat/lacking-template/internal/ui"
 	"github.com/mokiat/lacking-template/resources"
+	"github.com/mokiat/lacking/app"
+	"github.com/mokiat/lacking/game"
 	"github.com/mokiat/lacking/game/asset"
 	"github.com/mokiat/lacking/ui"
 	"github.com/mokiat/lacking/util/resource"
@@ -29,8 +32,9 @@ func runApplication() error {
 
 	locator := ui.WrappedLocator(resource.NewFSLocator(resources.UI))
 
+	gameController := game.NewController(registry, nativegame.NewShaderCollection(), nativegame.NewShaderBuilder())
 	uiController := ui.NewController(locator, nativeui.NewShaderCollection(), func(w *ui.Window) {
-		gameui.BootstrapApplication(w, registry)
+		gameui.BootstrapApplication(w, gameController)
 	})
 
 	cfg := nativeapp.NewConfig("Game", 1280, 800)
@@ -41,5 +45,5 @@ func runApplication() error {
 	cfg.SetIcon("ui/images/icon.png")
 	cfg.SetLocator(locator)
 	cfg.SetAudioEnabled(false)
-	return nativeapp.Run(cfg, uiController)
+	return nativeapp.Run(cfg, app.NewLayeredController(gameController, uiController))
 }
