@@ -2,12 +2,13 @@ package ui
 
 import (
 	"github.com/mokiat/lacking-template/internal/ui/view"
+	"github.com/mokiat/lacking/game/asset"
 	"github.com/mokiat/lacking/ui"
 	co "github.com/mokiat/lacking/ui/component"
 	"github.com/mokiat/lacking/ui/mvc"
 )
 
-func BootstrapApplication(window *ui.Window) {
+func BootstrapApplication(window *ui.Window, registry *asset.Registry) {
 	eventBus := mvc.NewEventBus()
 
 	scope := co.RootScope(window)
