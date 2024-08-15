@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	github.com/mokiat/gog v0.13.1
-	github.com/mokiat/lacking v0.19.0
+	github.com/mokiat/lacking v0.19.1
 	github.com/mokiat/lacking-native v0.19.0
 	github.com/mokiat/lacking-studio v0.19.0
 )
