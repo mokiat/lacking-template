@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"github.com/mokiat/lacking-template/internal/ui/global"
 	"github.com/mokiat/lacking-template/internal/ui/view"
 	"github.com/mokiat/lacking/game"
 	"github.com/mokiat/lacking/ui"
@@ -9,10 +10,15 @@ import (
 )
 
 func BootstrapApplication(window *ui.Window, gameController *game.Controller) {
+	engine := gameController.Engine()
 	eventBus := mvc.NewEventBus()
 
 	scope := co.RootScope(window)
 	scope = co.TypedValueScope(scope, eventBus)
+	scope = co.TypedValueScope(scope, global.Context{
+		Engine:      engine,
+		ResourceSet: engine.CreateResourceSet(),
+	})
 	co.Initialize(scope, co.New(Bootstrap, nil))
 }
 
