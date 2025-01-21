@@ -3,13 +3,16 @@ package model
 import "github.com/mokiat/lacking/ui/mvc"
 
 const (
-	ViewNameIntro ViewName = "intro"
-	ViewNamePlay  ViewName = "play"
+	ViewNameIntro   ViewName = "intro"
+	ViewNameError   ViewName = "error"
+	ViewNameLoading ViewName = "loading"
+	ViewNameHome    ViewName = "home"
+	ViewNamePlay    ViewName = "play"
 )
 
 type ViewName = string
 
-func NewApplication(eventBus *mvc.EventBus) *Application {
+func NewApplicationModel(eventBus *mvc.EventBus) *Application {
 	return &Application{
 		eventBus:   eventBus,
 		activeView: ViewNameIntro,
