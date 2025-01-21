@@ -4,6 +4,7 @@ go 1.23
 
 require (
 	github.com/mokiat/gog v0.15.0
+	github.com/mokiat/gomath v0.10.0
 	github.com/mokiat/lacking v0.22.0
 	github.com/mokiat/lacking-js v0.22.0
 	github.com/mokiat/lacking-native v0.22.0
@@ -21,7 +22,6 @@ require (
 	github.com/mdouchement/hdr v0.2.4 // indirect
 	github.com/mokiat/gblob v0.3.0 // indirect
 	github.com/mokiat/goexr v0.1.0 // indirect
-	github.com/mokiat/gomath v0.10.0 // indirect
 	github.com/mokiat/wasmal v0.1.0 // indirect
 	github.com/mokiat/wasmgl v0.7.0 // indirect
 	github.com/qmuntal/gltf v0.28.0 // indirect
