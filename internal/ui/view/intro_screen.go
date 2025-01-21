@@ -4,15 +4,21 @@ import (
 	"time"
 
 	"github.com/mokiat/gog/opt"
-	"github.com/mokiat/lacking-template/internal/ui/model"
 	"github.com/mokiat/lacking/ui"
 	co "github.com/mokiat/lacking/ui/component"
 	"github.com/mokiat/lacking/ui/layout"
 	"github.com/mokiat/lacking/ui/std"
+
+	"github.com/mokiat/lacking-template/internal/game/data"
+	"github.com/mokiat/lacking-template/internal/ui/global"
+	"github.com/mokiat/lacking-template/internal/ui/model"
 )
 
 type IntroScreenData struct {
-	AppModel *model.Application
+	AppModel     *model.Application
+	ErrorModel   *model.ErrorModel
+	HomeModel    *model.Home
+	LoadingModel *model.Loading
 }
 
 var IntroScreen = co.Define(&introScreenComponent{})
@@ -24,11 +30,30 @@ type introScreenComponent struct {
 func (c *introScreenComponent) OnCreate() {
 	co.Window(c.Scope()).SetCursorVisible(false)
 
+	globalContext := co.TypedValue[global.Context](c.Scope())
+	engine := globalContext.Engine
+	resourceSet := globalContext.ResourceSet
+
 	screenData := co.GetData[IntroScreenData](c.Properties())
 	appModel := screenData.AppModel
+	errorModel := screenData.ErrorModel
+	homeModel := screenData.HomeModel
+	loadingModel := screenData.LoadingModel
+
+	promise := model.NewLoadingPromise(
+		co.Window(c.Scope()),
+		data.LoadHomeData(engine, resourceSet),
+		homeModel.SetData,
+		errorModel.SetError,
+	)
+	loadingModel.SetState(model.LoadingState{
+		Promise:         promise,
+		SuccessViewName: model.ViewNameHome,
+		ErrorViewName:   model.ViewNameError,
+	})
 
 	co.After(c.Scope(), time.Second, func() {
-		appModel.SetActiveView(model.ViewNamePlay)
+		appModel.SetActiveView(model.ViewNameLoading)
 	})
 }
 
