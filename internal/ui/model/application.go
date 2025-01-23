@@ -3,11 +3,12 @@ package model
 import "github.com/mokiat/lacking/ui/mvc"
 
 const (
-	ViewNameIntro   ViewName = "intro"
-	ViewNameError   ViewName = "error"
-	ViewNameLoading ViewName = "loading"
-	ViewNameHome    ViewName = "home"
-	ViewNamePlay    ViewName = "play"
+	ViewNameIntro    ViewName = "intro"
+	ViewNameError    ViewName = "error"
+	ViewNameLoading  ViewName = "loading"
+	ViewNameLicenses ViewName = "licenses"
+	ViewNameHome     ViewName = "home"
+	ViewNamePlay     ViewName = "play"
 )
 
 type ViewName = string

@@ -47,7 +47,11 @@ func (c *applicationComponent) Render() co.Instance {
 				LoadingModel: c.loadingModel,
 			})
 		}))
-		// TODO: Add licensing screen
+		co.WithChild(model.ViewNameLicenses, co.New(LicensesScreen, func() {
+			co.WithData(LicensesScreenData{
+				AppModel: c.appModel,
+			})
+		}))
 		co.WithChild(model.ViewNameHome, co.New(HomeScreen, func() {
 			co.WithData(HomeScreenData{
 				AppModel:     c.appModel,

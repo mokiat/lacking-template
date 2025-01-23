@@ -171,7 +171,7 @@ func (c *homeScreenComponent) onPlayClicked() {
 }
 
 func (c *homeScreenComponent) onLicensesClicked() {
-	// c.appModel.SetActiveView(model.ViewNameLicenses) // TODO
+	c.appModel.SetActiveView(model.ViewNameLicenses)
 }
 
 func (c *homeScreenComponent) onExitClicked() {
