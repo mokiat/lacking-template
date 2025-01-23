@@ -12,12 +12,20 @@ var Application = mvc.EventListener(co.Define(&applicationComponent{}))
 type applicationComponent struct {
 	co.BaseComponent
 
-	appModel *model.Application
+	appModel     *model.ApplicationModel
+	errorModel   *model.ErrorModel
+	loadingModel *model.LoadingModel
+	homeModel    *model.HomeModel
+	playModel    *model.PlayModel
 }
 
 func (c *applicationComponent) OnCreate() {
 	eventBus := co.TypedValue[*mvc.EventBus](c.Scope())
-	c.appModel = model.NewApplication(eventBus)
+	c.appModel = model.NewApplicationModel(eventBus)
+	c.errorModel = model.NewErrorModel()
+	c.loadingModel = model.NewLoadingModel()
+	c.homeModel = model.NewHomeModel()
+	c.playModel = model.NewPlayModel()
 }
 
 func (c *applicationComponent) Render() co.Instance {
@@ -28,12 +36,37 @@ func (c *applicationComponent) Render() co.Instance {
 
 		co.WithChild(model.ViewNameIntro, co.New(IntroScreen, func() {
 			co.WithData(IntroScreenData{
+				AppModel:     c.appModel,
+				ErrorModel:   c.errorModel,
+				LoadingModel: c.loadingModel,
+				HomeModel:    c.homeModel,
+			})
+		}))
+		// TODO: Add error screen
+		co.WithChild(model.ViewNameLoading, co.New(LoadingScreen, func() {
+			co.WithData(LoadingScreenData{
+				AppModel:     c.appModel,
+				LoadingModel: c.loadingModel,
+			})
+		}))
+		co.WithChild(model.ViewNameLicenses, co.New(LicensesScreen, func() {
+			co.WithData(LicensesScreenData{
 				AppModel: c.appModel,
+			})
+		}))
+		co.WithChild(model.ViewNameHome, co.New(HomeScreen, func() {
+			co.WithData(HomeScreenData{
+				AppModel:     c.appModel,
+				ErrorModel:   c.errorModel,
+				LoadingModel: c.loadingModel,
+				HomeModel:    c.homeModel,
+				PlayModel:    c.playModel,
 			})
 		}))
 		co.WithChild(model.ViewNamePlay, co.New(PlayScreen, func() {
 			co.WithData(PlayScreenData{
-				AppModel: c.appModel,
+				AppModel:  c.appModel,
+				PlayModel: c.playModel,
 			})
 		}))
 	})
