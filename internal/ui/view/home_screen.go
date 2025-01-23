@@ -10,6 +10,7 @@ import (
 	"github.com/mokiat/lacking/ui/layout"
 	"github.com/mokiat/lacking/ui/std"
 
+	"github.com/mokiat/lacking-template/internal/game/data"
 	"github.com/mokiat/lacking-template/internal/ui/global"
 	"github.com/mokiat/lacking-template/internal/ui/model"
 	"github.com/mokiat/lacking-template/internal/ui/widget"
@@ -18,9 +19,11 @@ import (
 var HomeScreen = co.Define(&homeScreenComponent{})
 
 type HomeScreenData struct {
-	AppModel     *model.Application
-	LoadingModel *model.Loading
-	HomeModel    *model.Home
+	AppModel     *model.ApplicationModel
+	ErrorModel   *model.ErrorModel
+	LoadingModel *model.LoadingModel
+	HomeModel    *model.HomeModel
+	PlayModel    *model.PlayModel
 }
 
 type homeScreenComponent struct {
@@ -29,9 +32,11 @@ type homeScreenComponent struct {
 	engine      *game.Engine
 	resourceSet *game.ResourceSet
 
-	appModel     *model.Application
-	loadingModel *model.Loading
-	homeModel    *model.Home
+	appModel     *model.ApplicationModel
+	errorModel   *model.ErrorModel
+	loadingModel *model.LoadingModel
+	homeModel    *model.HomeModel
+	playModel    *model.PlayModel
 
 	scene *model.HomeScene
 }
@@ -43,8 +48,10 @@ func (c *homeScreenComponent) OnCreate() {
 
 	data := co.GetData[HomeScreenData](c.Properties())
 	c.appModel = data.AppModel
+	c.errorModel = data.ErrorModel
 	c.loadingModel = data.LoadingModel
 	c.homeModel = data.HomeModel
+	c.playModel = data.PlayModel
 
 	c.scene = c.homeModel.Scene()
 	if c.scene == nil {
@@ -166,8 +173,18 @@ func (c *homeScreenComponent) createCamera(scene *graphics.Scene) *graphics.Came
 }
 
 func (c *homeScreenComponent) onPlayClicked() {
-	// TODO: Load play data and forward to loading screen instead.
-	c.appModel.SetActiveView(model.ViewNamePlay)
+	promise := model.NewLoadingPromise(
+		co.Window(c.Scope()),
+		data.LoadPlayData(c.engine, c.resourceSet),
+		c.playModel.SetData,
+		c.errorModel.SetError,
+	)
+	c.loadingModel.SetState(model.LoadingState{
+		Promise:         promise,
+		SuccessViewName: model.ViewNamePlay,
+		ErrorViewName:   model.ViewNameError,
+	})
+	c.appModel.SetActiveView(model.ViewNameLoading)
 }
 
 func (c *homeScreenComponent) onLicensesClicked() {

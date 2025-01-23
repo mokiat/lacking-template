@@ -15,10 +15,10 @@ import (
 )
 
 type IntroScreenData struct {
-	AppModel     *model.Application
+	AppModel     *model.ApplicationModel
 	ErrorModel   *model.ErrorModel
-	HomeModel    *model.Home
-	LoadingModel *model.Loading
+	HomeModel    *model.HomeModel
+	LoadingModel *model.LoadingModel
 }
 
 var IntroScreen = co.Define(&introScreenComponent{})

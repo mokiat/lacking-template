@@ -6,28 +6,28 @@ import (
 	"github.com/mokiat/lacking-template/internal/game/data"
 )
 
-func NewHomeModel() *Home {
-	return &Home{}
+func NewHomeModel() *HomeModel {
+	return &HomeModel{}
 }
 
-type Home struct {
+type HomeModel struct {
 	sceneData *data.HomeData
 	scene     *HomeScene
 }
 
-func (h *Home) Data() *data.HomeData {
+func (h *HomeModel) Data() *data.HomeData {
 	return h.sceneData
 }
 
-func (h *Home) SetData(data *data.HomeData) {
+func (h *HomeModel) SetData(data *data.HomeData) {
 	h.sceneData = data
 }
 
-func (h *Home) Scene() *HomeScene {
+func (h *HomeModel) Scene() *HomeScene {
 	return h.scene
 }
 
-func (h *Home) SetScene(scene *HomeScene) {
+func (h *HomeModel) SetScene(scene *HomeScene) {
 	h.scene = scene
 }
 

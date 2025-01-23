@@ -14,8 +14,8 @@ import (
 var LoadingScreen = co.Define(&loadingScreenComponent{})
 
 type LoadingScreenData struct {
-	AppModel     *model.Application
-	LoadingModel *model.Loading
+	AppModel     *model.ApplicationModel
+	LoadingModel *model.LoadingModel
 }
 
 type loadingScreenComponent struct {

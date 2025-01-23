@@ -1,18 +1,18 @@
 package model
 
-func NewLoadingModel() *Loading {
-	return &Loading{}
+func NewLoadingModel() *LoadingModel {
+	return &LoadingModel{}
 }
 
-type Loading struct {
+type LoadingModel struct {
 	state LoadingState
 }
 
-func (l *Loading) State() LoadingState {
+func (l *LoadingModel) State() LoadingState {
 	return l.state
 }
 
-func (l *Loading) SetState(state LoadingState) {
+func (l *LoadingModel) SetState(state LoadingState) {
 	l.state = state
 }
 
