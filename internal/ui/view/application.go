@@ -42,7 +42,11 @@ func (c *applicationComponent) Render() co.Instance {
 				HomeModel:    c.homeModel,
 			})
 		}))
-		// TODO: Add error screen
+		co.WithChild(model.ViewNameError, co.New(ErrorScreen, func() {
+			co.WithData(ErrorScreenData{
+				ErrorModel: c.errorModel,
+			})
+		}))
 		co.WithChild(model.ViewNameLoading, co.New(LoadingScreen, func() {
 			co.WithData(LoadingScreenData{
 				AppModel:     c.appModel,
