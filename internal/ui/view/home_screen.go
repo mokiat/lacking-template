@@ -37,8 +37,6 @@ type homeScreenComponent struct {
 	loadingModel *model.LoadingModel
 	homeModel    *model.HomeModel
 	playModel    *model.PlayModel
-
-	scene *model.HomeScene
 }
 
 func (c *homeScreenComponent) OnCreate() {
@@ -53,12 +51,12 @@ func (c *homeScreenComponent) OnCreate() {
 	c.homeModel = componentData.HomeModel
 	c.playModel = componentData.PlayModel
 
-	c.scene = c.homeModel.Scene()
-	if c.scene == nil {
-		c.scene = c.createScene()
-		c.homeModel.SetScene(c.scene)
+	homeScene := c.homeModel.Scene()
+	if homeScene == nil {
+		homeScene = c.createScene()
+		c.homeModel.SetScene(homeScene)
 	}
-	c.engine.SetActiveScene(c.scene.Scene)
+	c.engine.SetActiveScene(homeScene.Scene)
 	c.engine.ResetDeltaTime()
 }
 

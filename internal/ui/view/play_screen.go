@@ -30,19 +30,20 @@ type PlayScreenData struct {
 type playScreenComponent struct {
 	co.BaseComponent
 
+	debugVisible bool
+
 	engine      *game.Engine
 	resourceSet *game.ResourceSet
 
 	appModel  *model.ApplicationModel
 	playModel *model.PlayModel
-	scene     *model.PlayScene
-
-	debugVisible bool
 }
 
 var _ ui.ElementKeyboardHandler = (*playScreenComponent)(nil)
 
 func (c *playScreenComponent) OnCreate() {
+	c.debugVisible = false
+
 	globalState := co.TypedValue[global.State](c.Scope())
 	c.engine = globalState.Engine
 	c.resourceSet = globalState.ResourceSet
@@ -51,14 +52,13 @@ func (c *playScreenComponent) OnCreate() {
 	c.appModel = componentData.AppModel
 	c.playModel = componentData.PlayModel
 
-	c.debugVisible = false
-
-	c.scene = c.playModel.Scene()
-	if c.scene == nil {
-		c.scene = c.createScene()
-		c.playModel.SetScene(c.scene)
+	playScene := c.playModel.Scene()
+	if playScene == nil {
+		playScene = c.createScene()
+		c.playModel.SetScene(playScene)
 	}
-	c.engine.SetActiveScene(c.scene.Scene)
+	c.engine.SetActiveScene(playScene.Scene)
+	c.engine.ResetDeltaTime()
 }
 
 func (c *playScreenComponent) OnDelete() {
