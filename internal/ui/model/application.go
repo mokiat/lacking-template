@@ -25,13 +25,13 @@ type ApplicationModel struct {
 	activeView ViewName
 }
 
-func (a *ApplicationModel) ActiveView() ViewName {
-	return a.activeView
+func (m *ApplicationModel) ActiveView() ViewName {
+	return m.activeView
 }
 
-func (a *ApplicationModel) SetActiveView(view ViewName) {
-	a.activeView = view
-	a.eventBus.Notify(ApplicationActiveViewChangedEvent{
+func (m *ApplicationModel) SetActiveView(view ViewName) {
+	m.activeView = view
+	m.eventBus.Notify(ApplicationActiveViewChangedEvent{
 		ActiveView: view,
 	})
 }

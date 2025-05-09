@@ -8,6 +8,8 @@ import (
 	"github.com/mokiat/lacking/ui/std"
 )
 
+var Button = co.Define(&buttonComponent{})
+
 type ButtonData struct {
 	Text string
 }
@@ -23,8 +25,6 @@ type ButtonCallbackData struct {
 var defaultButtonCallbackData = ButtonCallbackData{
 	OnClick: func() {},
 }
-
-var Button = co.Define(&buttonComponent{})
 
 type buttonComponent struct {
 	co.BaseComponent

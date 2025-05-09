@@ -8,10 +8,10 @@ type ErrorModel struct {
 	err error
 }
 
-func (e *ErrorModel) Error() error {
-	return e.err
+func (m *ErrorModel) Error() error {
+	return m.err
 }
 
-func (e *ErrorModel) SetError(err error) {
-	e.err = err
+func (m *ErrorModel) SetError(err error) {
+	m.err = err
 }

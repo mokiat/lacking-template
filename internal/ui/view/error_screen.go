@@ -14,11 +14,11 @@ import (
 	"github.com/mokiat/lacking-template/internal/ui/model"
 )
 
+var ErrorScreen = co.Define(&errorScreenComponent{})
+
 type ErrorScreenData struct {
 	ErrorModel *model.ErrorModel
 }
-
-var ErrorScreen = co.Define(&errorScreenComponent{})
 
 var _ ui.ElementKeyboardHandler = (*errorScreenComponent)(nil)
 
@@ -35,8 +35,8 @@ type errorScreenComponent struct {
 }
 
 func (c *errorScreenComponent) OnCreate() {
-	screenData := co.GetData[ErrorScreenData](c.Properties())
-	errorModel := screenData.ErrorModel
+	componentData := co.GetData[ErrorScreenData](c.Properties())
+	errorModel := componentData.ErrorModel
 	c.message = c.formatError(errorModel.Error())
 
 	c.titleFont = co.OpenFont(c.Scope(), "ui:///roboto-bold.ttf")

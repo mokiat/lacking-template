@@ -14,7 +14,7 @@ func BootstrapApplication(window *ui.Window, gameController *game.Controller, co
 
 	scope := co.RootScope(window)
 	scope = co.TypedValueScope(scope, eventBus)
-	scope = co.TypedValueScope(scope, global.Context{
+	scope = co.TypedValueScope(scope, global.State{
 		Engine:      engine,
 		ResourceSet: engine.CreateResourceSet(),
 	})

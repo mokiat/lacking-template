@@ -14,14 +14,14 @@ import (
 	"github.com/mokiat/lacking-template/internal/ui/model"
 )
 
+var IntroScreen = co.Define(&introScreenComponent{})
+
 type IntroScreenData struct {
 	AppModel     *model.ApplicationModel
 	ErrorModel   *model.ErrorModel
-	HomeModel    *model.HomeModel
 	LoadingModel *model.LoadingModel
+	HomeModel    *model.HomeModel
 }
-
-var IntroScreen = co.Define(&introScreenComponent{})
 
 type introScreenComponent struct {
 	co.BaseComponent
@@ -30,15 +30,15 @@ type introScreenComponent struct {
 func (c *introScreenComponent) OnCreate() {
 	co.Window(c.Scope()).SetCursorVisible(false)
 
-	globalContext := co.TypedValue[global.Context](c.Scope())
-	engine := globalContext.Engine
-	resourceSet := globalContext.ResourceSet
+	globalState := co.TypedValue[global.State](c.Scope())
+	engine := globalState.Engine
+	resourceSet := globalState.ResourceSet
 
-	screenData := co.GetData[IntroScreenData](c.Properties())
-	appModel := screenData.AppModel
-	errorModel := screenData.ErrorModel
-	homeModel := screenData.HomeModel
-	loadingModel := screenData.LoadingModel
+	componentData := co.GetData[IntroScreenData](c.Properties())
+	appModel := componentData.AppModel
+	errorModel := componentData.ErrorModel
+	homeModel := componentData.HomeModel
+	loadingModel := componentData.LoadingModel
 
 	promise := model.NewLoadingPromise(
 		co.Window(c.Scope()),

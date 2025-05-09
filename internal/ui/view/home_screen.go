@@ -42,16 +42,16 @@ type homeScreenComponent struct {
 }
 
 func (c *homeScreenComponent) OnCreate() {
-	globalContext := co.TypedValue[global.Context](c.Scope())
-	c.engine = globalContext.Engine
-	c.resourceSet = globalContext.ResourceSet
+	globalState := co.TypedValue[global.State](c.Scope())
+	c.engine = globalState.Engine
+	c.resourceSet = globalState.ResourceSet
 
-	data := co.GetData[HomeScreenData](c.Properties())
-	c.appModel = data.AppModel
-	c.errorModel = data.ErrorModel
-	c.loadingModel = data.LoadingModel
-	c.homeModel = data.HomeModel
-	c.playModel = data.PlayModel
+	componentData := co.GetData[HomeScreenData](c.Properties())
+	c.appModel = componentData.AppModel
+	c.errorModel = componentData.ErrorModel
+	c.loadingModel = componentData.LoadingModel
+	c.homeModel = componentData.HomeModel
+	c.playModel = componentData.PlayModel
 
 	c.scene = c.homeModel.Scene()
 	if c.scene == nil {
@@ -59,6 +59,7 @@ func (c *homeScreenComponent) OnCreate() {
 		c.homeModel.SetScene(c.scene)
 	}
 	c.engine.SetActiveScene(c.scene.Scene)
+	c.engine.ResetDeltaTime()
 }
 
 func (c *homeScreenComponent) OnDelete() {

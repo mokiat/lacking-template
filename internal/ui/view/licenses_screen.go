@@ -25,8 +25,8 @@ type licensesScreenComponent struct {
 }
 
 func (c *licensesScreenComponent) OnCreate() {
-	data := co.GetData[LicensesScreenData](c.Properties())
-	c.appModel = data.AppModel
+	componentData := co.GetData[LicensesScreenData](c.Properties())
+	c.appModel = componentData.AppModel
 }
 
 func (c *licensesScreenComponent) Render() co.Instance {

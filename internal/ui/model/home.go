@@ -15,20 +15,20 @@ type HomeModel struct {
 	scene     *HomeScene
 }
 
-func (h *HomeModel) Data() *data.HomeData {
-	return h.sceneData
+func (m *HomeModel) Data() *data.HomeData {
+	return m.sceneData
 }
 
-func (h *HomeModel) SetData(data *data.HomeData) {
-	h.sceneData = data
+func (m *HomeModel) SetData(data *data.HomeData) {
+	m.sceneData = data
 }
 
-func (h *HomeModel) Scene() *HomeScene {
-	return h.scene
+func (m *HomeModel) Scene() *HomeScene {
+	return m.scene
 }
 
-func (h *HomeModel) SetScene(scene *HomeScene) {
-	h.scene = scene
+func (m *HomeModel) SetScene(scene *HomeScene) {
+	m.scene = scene
 }
 
 type HomeScene struct {

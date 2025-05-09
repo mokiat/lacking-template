@@ -43,13 +43,13 @@ type playScreenComponent struct {
 var _ ui.ElementKeyboardHandler = (*playScreenComponent)(nil)
 
 func (c *playScreenComponent) OnCreate() {
-	globalContext := co.TypedValue[global.Context](c.Scope())
-	c.engine = globalContext.Engine
-	c.resourceSet = globalContext.ResourceSet
+	globalState := co.TypedValue[global.State](c.Scope())
+	c.engine = globalState.Engine
+	c.resourceSet = globalState.ResourceSet
 
-	data := co.GetData[PlayScreenData](c.Properties())
-	c.appModel = data.AppModel
-	c.playModel = data.PlayModel
+	componentData := co.GetData[PlayScreenData](c.Properties())
+	c.appModel = componentData.AppModel
+	c.playModel = componentData.PlayModel
 
 	c.debugVisible = false
 
