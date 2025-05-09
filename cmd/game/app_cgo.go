@@ -9,6 +9,7 @@ import (
 	nativegame "github.com/mokiat/lacking-native/game"
 	nativeui "github.com/mokiat/lacking-native/ui"
 	gameui "github.com/mokiat/lacking-template/internal/ui"
+	"github.com/mokiat/lacking-template/internal/ui/view"
 	"github.com/mokiat/lacking-template/resources"
 	"github.com/mokiat/lacking/app"
 	"github.com/mokiat/lacking/game"
@@ -34,7 +35,7 @@ func runApplication() error {
 
 	gameController := game.NewController(registry, nativegame.NewShaderCollection(), nativegame.NewShaderBuilder())
 	uiController := ui.NewController(locator, nativeui.NewShaderCollection(), func(w *ui.Window) {
-		gameui.BootstrapApplication(w, gameController)
+		gameui.BootstrapApplication(w, gameController, view.Application)
 	})
 
 	cfg := nativeapp.NewConfig("Game", 1280, 800)
