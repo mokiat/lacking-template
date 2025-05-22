@@ -6,17 +6,18 @@ tasks:
     env:
       GOWORK: off
     cmds:
-      - rm ./resources/licenses.txt
-      - go tool go-licenses report --ignore github.com/mokiat/lacking-template --template ./resources/licenses.tmpl ./... | fold -w 80 -s > ./resources/licenses.txt
+      - rm './resources/licenses.txt'
+      - go tool go-licenses report --ignore github.com/mokiat/lacking-template --template './resources/licenses.tmpl' ./... | fold -w 80 -s > './resources/licenses.txt'
 
   clean:
     desc: Clean up the assets directory.
     cmds:
-      - rm -r ./assets
+      - rm -r './assets'
 
   pack:
     desc: Prepare assets for the game.
     cmds:
+      - mkdir -p './assets'
       - go run './cmd/studio' pack ./ {{.CLI_ARGS}}
 
   webpack:

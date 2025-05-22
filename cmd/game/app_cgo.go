@@ -13,27 +13,20 @@ import (
 	"github.com/mokiat/lacking-template/resources"
 	"github.com/mokiat/lacking/app"
 	"github.com/mokiat/lacking/game"
-	"github.com/mokiat/lacking/game/asset"
+	"github.com/mokiat/lacking/game/chunked"
 	"github.com/mokiat/lacking/ui"
 	"github.com/mokiat/lacking/util/resource"
 )
 
 func runApplication() error {
-	registryStorage, err := asset.NewFSStorage("./assets")
+	storage, err := chunked.NewFileStorage("./assets")
 	if err != nil {
 		return fmt.Errorf("failed to initialize storage: %w", err)
 	}
 
-	registryFormatter := asset.NewBlobFormatter()
-
-	registry, err := asset.NewRegistry(registryStorage, registryFormatter)
-	if err != nil {
-		return fmt.Errorf("failed to initialize registry: %w", err)
-	}
-
 	locator := ui.WrappedLocator(resource.NewFSLocator(resources.UI))
 
-	gameController := game.NewController(registry, nativegame.NewShaderCollection(), nativegame.NewShaderBuilder())
+	gameController := game.NewController(storage, nativegame.NewShaderCollection(), nativegame.NewShaderBuilder())
 	uiController := ui.NewController(locator, nativeui.NewShaderCollection(), func(w *ui.Window) {
 		gameui.BootstrapApplication(w, gameController, view.Application)
 	})

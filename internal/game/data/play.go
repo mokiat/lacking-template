@@ -8,9 +8,9 @@ import (
 )
 
 func LoadPlayData(engine *game.Engine, resourceSet *game.ResourceSet) async.Promise[*PlayData] {
-	scenePromise := resourceSet.OpenModelByName("PlayScreen")
-	boardPromise := resourceSet.OpenModelByName("Board")
-	ballPromise := resourceSet.OpenModelByName("Ball")
+	scenePromise := resourceSet.OpenModelByName("play-screen.dat")
+	boardPromise := resourceSet.OpenModelByName("board.dat")
+	ballPromise := resourceSet.OpenModelByName("ball.dat")
 
 	promise := async.NewPromise[*PlayData]()
 	go func() {

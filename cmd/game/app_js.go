@@ -9,32 +9,26 @@ import (
 	jsgame "github.com/mokiat/lacking-js/game"
 	jsui "github.com/mokiat/lacking-js/ui"
 	gameui "github.com/mokiat/lacking-template/internal/ui"
+	"github.com/mokiat/lacking-template/internal/ui/view"
 	"github.com/mokiat/lacking-template/resources"
 	"github.com/mokiat/lacking/app"
 	"github.com/mokiat/lacking/game"
-	"github.com/mokiat/lacking/game/asset"
+	"github.com/mokiat/lacking/game/chunked"
 	"github.com/mokiat/lacking/ui"
 	"github.com/mokiat/lacking/util/resource"
 )
 
 func runApplication() error {
-	registryStorage, err := asset.NewWebStorage(".")
+	storage, err := chunked.NewWebStorage(".")
 	if err != nil {
 		return fmt.Errorf("failed to initialize storage: %w", err)
 	}
 
-	registryFormatter := asset.NewBlobFormatter()
-
-	registry, err := asset.NewRegistry(registryStorage, registryFormatter)
-	if err != nil {
-		return fmt.Errorf("failed to initialize registry: %w", err)
-	}
-
 	locator := ui.WrappedLocator(resource.NewFSLocator(resources.UI))
 
-	gameController := game.NewController(registry, jsgame.NewShaderCollection(), jsgame.NewShaderBuilder())
+	gameController := game.NewController(storage, jsgame.NewShaderCollection(), jsgame.NewShaderBuilder())
 	uiController := ui.NewController(locator, jsui.NewShaderCollection(), func(w *ui.Window) {
-		gameui.BootstrapApplication(w, gameController)
+		gameui.BootstrapApplication(w, gameController, view.Application)
 	})
 
 	cfg := jsapp.NewConfig("screen")

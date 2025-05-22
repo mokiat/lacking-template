@@ -8,7 +8,7 @@ import (
 )
 
 func LoadHomeData(engine *game.Engine, resourceSet *game.ResourceSet) async.Promise[*HomeData] {
-	scenePromise := resourceSet.OpenModelByName("HomeScreen")
+	scenePromise := resourceSet.OpenModelByName("home-screen.dat")
 
 	promise := async.NewPromise[*HomeData]()
 	go func() {
