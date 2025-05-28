@@ -5,6 +5,12 @@ import (
 	"os"
 
 	"github.com/mokiat/lacking-studio/studio"
+	"github.com/mokiat/lacking/game/asset/conv"
+	"github.com/mokiat/lacking/game/asset/dsl"
+)
+
+var _ = dsl.Use(
+	conv.NewModelConverter(),
 )
 
 func main() {

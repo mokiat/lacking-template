@@ -43,7 +43,7 @@ var _ = func() any {
 		dsl.SetCastShadow(dsl.Const(true)),
 	)
 
-	return dsl.CreateModel("play-screen.dat",
+	return dsl.Save("play-screen.dat", dsl.CreateModel(
 		dsl.AddNode(dsl.CreateNode("Sky",
 			dsl.SetTarget(sky),
 		)),
@@ -57,17 +57,13 @@ var _ = func() any {
 				dprec.RotationQuat(dprec.Degrees(-45), dprec.BasisXVec3()),
 			))),
 		)),
-	)
+	))
 }()
 
-var _ = func() any {
-	return dsl.CreateModel("board.dat",
-		dsl.AppendModel(dsl.OpenGLTFModel("resources/raw/models/board.glb")),
-	)
-}()
+var _ = dsl.Save("board.dat",
+	dsl.OpenGLTFModel("resources/raw/models/board.glb"),
+)
 
-var _ = func() any {
-	return dsl.CreateModel("ball.dat",
-		dsl.AppendModel(dsl.OpenGLTFModel("resources/raw/models/ball.glb")),
-	)
-}()
+var _ = dsl.Save("ball.dat",
+	dsl.OpenGLTFModel("resources/raw/models/ball.glb"),
+)
