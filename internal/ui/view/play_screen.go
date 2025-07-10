@@ -13,11 +13,11 @@ import (
 	"github.com/mokiat/lacking/game/graphics"
 	"github.com/mokiat/lacking/game/physics"
 	"github.com/mokiat/lacking/game/physics/acceleration"
-	"github.com/mokiat/lacking/game/physics/collision"
 	"github.com/mokiat/lacking/ui"
 	co "github.com/mokiat/lacking/ui/component"
 	"github.com/mokiat/lacking/ui/layout"
 	"github.com/mokiat/lacking/ui/std"
+	"github.com/mokiat/lacking/util/shape3d"
 )
 
 var PlayScreen = co.Define(&playScreenComponent{})
@@ -113,16 +113,16 @@ func (c *playScreenComponent) createScene() *model.PlayScene {
 
 	scene := c.engine.CreateScene()
 
-	scene.CreateModel(game.ModelInfo{
-		Name:       "Scene",
-		Definition: sceneData.Scene,
-		IsDynamic:  false,
+	scene.InstantiateModel(game.ModelInfo{
+		Template:  sceneData.Scene,
+		Name:      opt.V("Scene"),
+		IsDynamic: false,
 	})
 
-	boardModel := scene.CreateModel(game.ModelInfo{
-		Name:       "Board",
-		Definition: sceneData.Board,
-		IsDynamic:  false,
+	boardModel := scene.InstantiateModel(game.ModelInfo{
+		Template:  sceneData.Board,
+		Name:      opt.V("Board"),
+		IsDynamic: false,
 	})
 	scene.Root().AppendChild(boardModel.Root())
 
@@ -135,11 +135,11 @@ func (c *playScreenComponent) createScene() *model.PlayScene {
 		})
 	}
 
-	ballModel := scene.CreateModel(game.ModelInfo{
-		Name:       "Ball",
-		Position:   opt.V(dprec.NewVec3(-2.0, 3.0, 2.0)),
-		Definition: sceneData.Ball,
-		IsDynamic:  true,
+	ballModel := scene.InstantiateModel(game.ModelInfo{
+		Template:  sceneData.Ball,
+		Name:      opt.V("Ball"),
+		Position:  opt.V(dprec.NewVec3(-1.0, 3.0, 2.0)),
+		IsDynamic: true,
 	})
 
 	physicsScene := scene.Physics()
@@ -151,8 +151,8 @@ func (c *playScreenComponent) createScene() *model.PlayScene {
 		DragFactor:             0.1,
 		AngularDragFactor:      0.1,
 		CollisionGroup:         1,
-		CollisionSpheres: []collision.Sphere{
-			collision.NewSphere(dprec.ZeroVec3(), 1.0),
+		CollisionSpheres: []shape3d.Sphere{
+			shape3d.NewSphere(dprec.ZeroVec3(), 1.0),
 		},
 	})
 	ballBody := physicsScene.CreateBody(physics.BodyInfo{

@@ -130,10 +130,10 @@ func (c *homeScreenComponent) createScene() *model.HomeScene {
 
 	scene := c.engine.CreateScene()
 
-	sceneModel := scene.CreateModel(game.ModelInfo{
-		Name:       "Scene",
-		Definition: sceneData.Scene,
-		IsDynamic:  false,
+	sceneModel := scene.InstantiateModel(game.ModelInfo{
+		Template:  sceneData.Scene,
+		Name:      opt.V("Scene"),
+		IsDynamic: false,
 	})
 	scene.Root().AppendChild(sceneModel.Root())
 
@@ -147,8 +147,8 @@ func (c *homeScreenComponent) createScene() *model.HomeScene {
 	}
 
 	const animationName = "CameraRotation"
-	if animation := sceneModel.FindAnimation(animationName); animation != nil {
-		playback := animation.Playback()
+	if recording := sceneModel.FindRecording(animationName); recording != nil {
+		playback := recording.Playback()
 		playback.SetLoop(true)
 		sceneModel.BindAnimationSource(playback)
 		scene.PlayAnimationTree(playback)
