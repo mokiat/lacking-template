@@ -14,7 +14,7 @@ import (
 	"github.com/mokiat/lacking-template/internal/ui/model"
 )
 
-var IntroScreen = co.Define(&introScreenComponent{})
+var IntroScreen = co.Define[*introScreenComponent]()
 
 type IntroScreenData struct {
 	AppModel     *model.ApplicationModel

@@ -16,7 +16,7 @@ import (
 	"github.com/mokiat/lacking-template/internal/ui/widget"
 )
 
-var HomeScreen = co.Define(&homeScreenComponent{})
+var HomeScreen = co.Define[*homeScreenComponent]()
 
 type HomeScreenData struct {
 	AppModel     *model.ApplicationModel
@@ -128,30 +128,29 @@ func (c *homeScreenComponent) Render() co.Instance {
 func (c *homeScreenComponent) createScene() *model.HomeScene {
 	sceneData := c.homeModel.Data()
 
-	scene := c.engine.CreateScene()
+	scene := c.engine.CreateScene(game.SceneInfo{
+		IncludePhysics: opt.V(false),
+		IncludeECS:     opt.V(false),
+	})
 
 	sceneModel := scene.InstantiateModel(game.ModelInfo{
 		Template:  sceneData.Scene,
 		Name:      opt.V("Scene"),
 		IsDynamic: false,
 	})
-	scene.Root().AppendChild(sceneModel.Root())
 
 	camera := c.createCamera(scene.Graphics())
 	scene.Graphics().SetActiveCamera(camera)
 
-	if cameraNode := sceneModel.FindNode("Camera"); cameraNode != nil {
-		cameraNode.SetTarget(game.CameraNodeTarget{
-			Camera: camera,
-		})
+	if cameraNode := sceneModel.FindNode("Camera"); !cameraNode.IsNil() {
+		scene.CameraBindingSet().Bind(cameraNode, camera)
 	}
 
 	const animationName = "CameraRotation"
 	if recording := sceneModel.FindRecording(animationName); recording != nil {
-		playback := recording.Playback()
-		playback.SetLoop(true)
-		sceneModel.BindAnimationSource(playback)
-		scene.PlayAnimationTree(playback)
+		playback := recording.Playback(true)
+		player := sceneModel.BindAnimation(playback)
+		scene.PlayAnimation(player)
 	}
 
 	return &model.HomeScene{

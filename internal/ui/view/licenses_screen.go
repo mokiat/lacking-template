@@ -12,7 +12,7 @@ import (
 	"github.com/mokiat/lacking-template/resources"
 )
 
-var LicensesScreen = co.Define(&licensesScreenComponent{})
+var LicensesScreen = co.Define[*licensesScreenComponent]()
 
 type LicensesScreenData struct {
 	AppModel *model.ApplicationModel
@@ -112,7 +112,7 @@ func (c *licensesScreenComponent) Render() co.Instance {
 				co.WithData(std.ScrollPaneData{
 					DisableHorizontal: true,
 					DisableVertical:   false,
-					Focused:           true,
+					CreateFocused:     true,
 				})
 
 				co.WithChild("license-holder", co.New(std.Element, func() {

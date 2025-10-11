@@ -8,7 +8,7 @@ import (
 	"github.com/mokiat/lacking/ui/std"
 )
 
-var Button = co.Define(&buttonComponent{})
+var Button = co.Define[*buttonComponent]()
 
 type ButtonData struct {
 	Text string

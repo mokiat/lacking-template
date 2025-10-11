@@ -45,13 +45,13 @@ var _ = func() any {
 
 	return dsl.Save("play-screen.dat", dsl.CreateModel(
 		dsl.AddNode(dsl.CreateNode("Sky",
-			dsl.SetTarget(sky),
+			dsl.AddAttachment(sky),
 		)),
 		dsl.AddNode(dsl.CreateNode("AmbientLight",
-			dsl.SetTarget(ambientLight),
+			dsl.AddAttachment(ambientLight),
 		)),
 		dsl.AddNode(dsl.CreateNode("DirectionalLight",
-			dsl.SetTarget(directionalLight),
+			dsl.AddAttachment(directionalLight),
 			dsl.SetRotation(dsl.Const(dprec.QuatProd(
 				dprec.RotationQuat(dprec.Degrees(-30), dprec.BasisYVec3()),
 				dprec.RotationQuat(dprec.Degrees(-45), dprec.BasisXVec3()),

@@ -12,7 +12,7 @@ var _ = func() any {
 	return dsl.Save("home-screen.dat", dsl.CreateModel(
 		dsl.AppendModel(dsl.OpenGLTFModel("resources/raw/models/home.glb")),
 		dsl.AddNode(dsl.CreateNode("Sky",
-			dsl.SetTarget(sky),
+			dsl.AddAttachment(sky),
 		)),
 	))
 }()

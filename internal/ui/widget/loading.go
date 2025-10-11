@@ -10,7 +10,7 @@ import (
 	"github.com/mokiat/lacking/ui/std"
 )
 
-var Loading = co.Define(&loadingComponent{})
+var Loading = co.Define[*loadingComponent]()
 
 type loadingComponent struct {
 	co.BaseComponent

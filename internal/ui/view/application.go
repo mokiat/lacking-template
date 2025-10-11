@@ -7,7 +7,7 @@ import (
 	"github.com/mokiat/lacking/ui/std"
 )
 
-var Application = mvc.EventListener(co.Define(&applicationComponent{}))
+var Application = mvc.EventListener(co.Define[*applicationComponent]())
 
 type applicationComponent struct {
 	co.BaseComponent
