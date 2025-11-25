@@ -16,7 +16,7 @@ import (
 	"github.com/mokiat/lacking-template/internal/ui/widget"
 )
 
-var HomeScreen = co.Define(&homeScreenComponent{})
+var HomeScreen = co.Define[*homeScreenComponent]()
 
 type HomeScreenData struct {
 	AppModel     *model.ApplicationModel
@@ -37,28 +37,27 @@ type homeScreenComponent struct {
 	loadingModel *model.LoadingModel
 	homeModel    *model.HomeModel
 	playModel    *model.PlayModel
-
-	scene *model.HomeScene
 }
 
 func (c *homeScreenComponent) OnCreate() {
-	globalContext := co.TypedValue[global.Context](c.Scope())
-	c.engine = globalContext.Engine
-	c.resourceSet = globalContext.ResourceSet
+	globalState := co.TypedValue[global.State](c.Scope())
+	c.engine = globalState.Engine
+	c.resourceSet = globalState.ResourceSet
 
-	data := co.GetData[HomeScreenData](c.Properties())
-	c.appModel = data.AppModel
-	c.errorModel = data.ErrorModel
-	c.loadingModel = data.LoadingModel
-	c.homeModel = data.HomeModel
-	c.playModel = data.PlayModel
+	componentData := co.GetData[HomeScreenData](c.Properties())
+	c.appModel = componentData.AppModel
+	c.errorModel = componentData.ErrorModel
+	c.loadingModel = componentData.LoadingModel
+	c.homeModel = componentData.HomeModel
+	c.playModel = componentData.PlayModel
 
-	c.scene = c.homeModel.Scene()
-	if c.scene == nil {
-		c.scene = c.createScene()
-		c.homeModel.SetScene(c.scene)
+	homeScene := c.homeModel.Scene()
+	if homeScene == nil {
+		homeScene = c.createScene()
+		c.homeModel.SetScene(homeScene)
 	}
-	c.engine.SetActiveScene(c.scene.Scene)
+	c.engine.SetActiveScene(homeScene.Scene)
+	c.engine.ResetDeltaTime()
 }
 
 func (c *homeScreenComponent) OnDelete() {
@@ -129,30 +128,29 @@ func (c *homeScreenComponent) Render() co.Instance {
 func (c *homeScreenComponent) createScene() *model.HomeScene {
 	sceneData := c.homeModel.Data()
 
-	scene := c.engine.CreateScene()
-
-	sceneModel := scene.CreateModel(game.ModelInfo{
-		Name:       "Scene",
-		Definition: sceneData.Scene,
-		IsDynamic:  false,
+	scene := c.engine.CreateScene(game.SceneInfo{
+		IncludePhysics: opt.V(false),
+		IncludeECS:     opt.V(false),
 	})
-	scene.Root().AppendChild(sceneModel.Root())
+
+	sceneModel := scene.InstantiateModel(game.ModelInfo{
+		Template:  sceneData.Scene,
+		Name:      opt.V("Scene"),
+		IsDynamic: false,
+	})
 
 	camera := c.createCamera(scene.Graphics())
 	scene.Graphics().SetActiveCamera(camera)
 
-	if cameraNode := sceneModel.FindNode("Camera"); cameraNode != nil {
-		cameraNode.SetTarget(game.CameraNodeTarget{
-			Camera: camera,
-		})
+	if cameraNode := sceneModel.FindNode("Camera"); !cameraNode.IsNil() {
+		scene.CameraBindingSet().Bind(cameraNode, camera)
 	}
 
 	const animationName = "CameraRotation"
-	if animation := sceneModel.FindAnimation(animationName); animation != nil {
-		playback := animation.Playback()
-		playback.SetLoop(true)
-		sceneModel.BindAnimationSource(playback)
-		scene.PlayAnimationTree(playback)
+	if recording := sceneModel.FindRecording(animationName); recording != nil {
+		playback := recording.Playback(true)
+		player := sceneModel.BindAnimation(playback)
+		scene.PlayAnimation(player)
 	}
 
 	return &model.HomeScene{

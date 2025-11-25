@@ -6,12 +6,18 @@ tasks:
     env:
       GOWORK: off
     cmds:
-      - rm ./resources/licenses.txt
-      - go run github.com/google/go-licenses@v1.6.0 report --ignore github.com/mokiat/lacking-template --template ./resources/licenses.tmpl ./... | fold -w 80 -s > ./resources/licenses.txt
+      - rm './resources/licenses.txt'
+      - go tool go-licenses report --ignore github.com/mokiat/lacking-template --template './resources/licenses.tmpl' ./... | fold -w 80 -s > './resources/licenses.txt'
+
+  clean:
+    desc: Clean up the assets directory.
+    cmds:
+      - rm -r './assets'
 
   pack:
     desc: Prepare assets for the game.
     cmds:
+      - mkdir -p './assets'
       - go run './cmd/studio' pack ./ {{.CLI_ARGS}}
 
   webpack:
@@ -22,7 +28,7 @@ tasks:
       - cp 'resources/web/main.css' 'assets/web/main.css'
       - cp 'resources/web/main.js' 'assets/web/main.js'
       - cp 'resources/web/index.html' 'assets/index.html'
-      - cp 'resources/web/wasm_exec.js' 'assets/web/wasm_exec.js'
+      - cp "$(go env GOROOT)/lib/wasm/wasm_exec.js" 'assets/web'
 
   wasm:
     desc: Build the game executable for the web.
@@ -37,8 +43,15 @@ tasks:
     cmds:
       - go run './cmd/studio' preview ./ {{.CLI_ARGS}}
 
+  debug:
+    desc: Run the game in debug mode.
+    cmds:
+      - go run -tags debug './cmd/game'
+
   run:
     desc: Run the game.
+    env:
+      GODEBUG: cgocheck=0
     cmds:
       - go run './cmd/game'
 

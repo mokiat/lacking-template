@@ -9,10 +9,10 @@ var _ = func() any {
 		dsl.RGB(2.0, 1.5, 0.5),
 	))
 
-	return dsl.CreateModel("HomeScreen",
+	return dsl.Save("home-screen.dat", dsl.CreateModel(
 		dsl.AppendModel(dsl.OpenGLTFModel("resources/raw/models/home.glb")),
 		dsl.AddNode(dsl.CreateNode("Sky",
-			dsl.SetTarget(sky),
+			dsl.AddAttachment(sky),
 		)),
-	)
+	))
 }()

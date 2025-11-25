@@ -2,7 +2,7 @@ package global
 
 import "github.com/mokiat/lacking/game"
 
-type Context struct {
+type State struct {
 	Engine      *game.Engine
 	ResourceSet *game.ResourceSet
 }

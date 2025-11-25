@@ -15,20 +15,20 @@ type PlayModel struct {
 	scene     *PlayScene
 }
 
-func (h *PlayModel) Data() *data.PlayData {
-	return h.sceneData
+func (m *PlayModel) Data() *data.PlayData {
+	return m.sceneData
 }
 
-func (h *PlayModel) SetData(data *data.PlayData) {
-	h.sceneData = data
+func (m *PlayModel) SetData(data *data.PlayData) {
+	m.sceneData = data
 }
 
-func (h *PlayModel) Scene() *PlayScene {
-	return h.scene
+func (m *PlayModel) Scene() *PlayScene {
+	return m.scene
 }
 
-func (h *PlayModel) SetScene(scene *PlayScene) {
-	h.scene = scene
+func (m *PlayModel) SetScene(scene *PlayScene) {
+	m.scene = scene
 }
 
 type PlayScene struct {

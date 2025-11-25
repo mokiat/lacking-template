@@ -8,12 +8,12 @@ type LoadingModel struct {
 	state LoadingState
 }
 
-func (l *LoadingModel) State() LoadingState {
-	return l.state
+func (m *LoadingModel) State() LoadingState {
+	return m.state
 }
 
-func (l *LoadingModel) SetState(state LoadingState) {
-	l.state = state
+func (m *LoadingModel) SetState(state LoadingState) {
+	m.state = state
 }
 
 type LoadingState struct {

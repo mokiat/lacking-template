@@ -13,14 +13,14 @@ import (
 	"github.com/mokiat/lacking/game/graphics"
 	"github.com/mokiat/lacking/game/physics"
 	"github.com/mokiat/lacking/game/physics/acceleration"
-	"github.com/mokiat/lacking/game/physics/collision"
 	"github.com/mokiat/lacking/ui"
 	co "github.com/mokiat/lacking/ui/component"
 	"github.com/mokiat/lacking/ui/layout"
 	"github.com/mokiat/lacking/ui/std"
+	"github.com/mokiat/lacking/util/shape3d"
 )
 
-var PlayScreen = co.Define(&playScreenComponent{})
+var PlayScreen = co.Define[*playScreenComponent]()
 
 type PlayScreenData struct {
 	AppModel  *model.ApplicationModel
@@ -30,35 +30,35 @@ type PlayScreenData struct {
 type playScreenComponent struct {
 	co.BaseComponent
 
+	debugVisible bool
+
 	engine      *game.Engine
 	resourceSet *game.ResourceSet
 
 	appModel  *model.ApplicationModel
 	playModel *model.PlayModel
-	scene     *model.PlayScene
-
-	debugVisible bool
 }
 
 var _ ui.ElementKeyboardHandler = (*playScreenComponent)(nil)
 
 func (c *playScreenComponent) OnCreate() {
-	globalContext := co.TypedValue[global.Context](c.Scope())
-	c.engine = globalContext.Engine
-	c.resourceSet = globalContext.ResourceSet
-
-	data := co.GetData[PlayScreenData](c.Properties())
-	c.appModel = data.AppModel
-	c.playModel = data.PlayModel
-
 	c.debugVisible = false
 
-	c.scene = c.playModel.Scene()
-	if c.scene == nil {
-		c.scene = c.createScene()
-		c.playModel.SetScene(c.scene)
+	globalState := co.TypedValue[global.State](c.Scope())
+	c.engine = globalState.Engine
+	c.resourceSet = globalState.ResourceSet
+
+	componentData := co.GetData[PlayScreenData](c.Properties())
+	c.appModel = componentData.AppModel
+	c.playModel = componentData.PlayModel
+
+	playScene := c.playModel.Scene()
+	if playScene == nil {
+		playScene = c.createScene()
+		c.playModel.SetScene(playScene)
 	}
-	c.engine.SetActiveScene(c.scene.Scene)
+	c.engine.SetActiveScene(playScene.Scene)
+	c.engine.ResetDeltaTime()
 }
 
 func (c *playScreenComponent) OnDelete() {
@@ -87,10 +87,10 @@ func (c *playScreenComponent) OnKeyboardEvent(element *ui.Element, event ui.Keyb
 func (c *playScreenComponent) Render() co.Instance {
 	return co.New(std.Element, func() {
 		co.WithData(std.ElementData{
-			Essence:   c,
-			Focusable: opt.V(true),
-			Focused:   opt.V(true),
-			Layout:    layout.Anchor(),
+			Essence:       c,
+			CanAutoFocus:  opt.V(true),
+			CreateFocused: true,
+			Layout:        layout.Anchor(),
 		})
 
 		if c.debugVisible {
@@ -111,36 +111,36 @@ func (c *playScreenComponent) Render() co.Instance {
 func (c *playScreenComponent) createScene() *model.PlayScene {
 	sceneData := c.playModel.Data()
 
-	scene := c.engine.CreateScene()
-
-	scene.CreateModel(game.ModelInfo{
-		Name:       "Scene",
-		Definition: sceneData.Scene,
-		IsDynamic:  false,
+	scene := c.engine.CreateScene(game.SceneInfo{
+		IncludeECS: opt.V(false),
 	})
 
-	boardModel := scene.CreateModel(game.ModelInfo{
-		Name:       "Board",
-		Definition: sceneData.Board,
-		IsDynamic:  false,
+	scene.InstantiateModel(game.ModelInfo{
+		Template:  sceneData.Scene,
+		Name:      opt.V("Scene"),
+		IsDynamic: false,
 	})
-	scene.Root().AppendChild(boardModel.Root())
+
+	boardModel := scene.InstantiateModel(game.ModelInfo{
+		Template:  sceneData.Board,
+		Name:      opt.V("Board"),
+		IsDynamic: false,
+	})
 
 	camera := c.createCamera(scene.Graphics())
 	scene.Graphics().SetActiveCamera(camera)
 
-	if cameraNode := boardModel.FindNode("Camera"); cameraNode != nil {
-		cameraNode.SetTarget(game.CameraNodeTarget{
-			Camera: camera,
-		})
+	if cameraNode := boardModel.FindNode("Camera"); !cameraNode.IsNil() {
+		scene.CameraBindingSet().Bind(cameraNode, camera)
 	}
 
-	ballModel := scene.CreateModel(game.ModelInfo{
-		Name:       "Ball",
-		Position:   opt.V(dprec.NewVec3(-2.0, 3.0, 2.0)),
-		Definition: sceneData.Ball,
-		IsDynamic:  true,
+	ballModel := scene.InstantiateModel(game.ModelInfo{
+		Template:  sceneData.Ball,
+		Name:      opt.V("Ball"),
+		Position:  opt.V(dprec.NewVec3(-1.0, 3.0, 2.0)),
+		IsDynamic: true,
 	})
+	ballModelNode := scene.Hierarchy().Wrap(ballModel.Root())
 
 	physicsScene := scene.Physics()
 	ballBodyDef := physicsScene.Engine().CreateBodyDefinition(physics.BodyDefinitionInfo{
@@ -151,20 +151,18 @@ func (c *playScreenComponent) createScene() *model.PlayScene {
 		DragFactor:             0.1,
 		AngularDragFactor:      0.1,
 		CollisionGroup:         1,
-		CollisionSpheres: []collision.Sphere{
-			collision.NewSphere(dprec.ZeroVec3(), 1.0),
+		CollisionSpheres: []shape3d.Sphere{
+			shape3d.NewSphere(dprec.ZeroVec3(), 1.0),
 		},
 	})
 	ballBody := physicsScene.CreateBody(physics.BodyInfo{
 		Name:       "Ball",
 		Definition: ballBodyDef,
-		Position:   ballModel.Root().Position(),
-		Rotation:   ballModel.Root().Rotation(),
+		Position:   ballModelNode.Position(),
+		Rotation:   ballModelNode.Rotation(),
 	})
 	ballBody.SetVelocity(dprec.NewVec3(0.0, 0.0, 3.0))
-	ballModel.Root().SetSource(game.BodyNodeSource{
-		Body: ballBody,
-	})
+	scene.BodyBindingSet().Bind(ballModelNode.ID(), ballBody)
 
 	physicsScene.CreateGlobalAccelerator(acceleration.NewGravityDirection())
 

@@ -2,32 +2,21 @@ package ui
 
 import (
 	"github.com/mokiat/lacking-template/internal/ui/global"
-	"github.com/mokiat/lacking-template/internal/ui/view"
 	"github.com/mokiat/lacking/game"
 	"github.com/mokiat/lacking/ui"
 	co "github.com/mokiat/lacking/ui/component"
 	"github.com/mokiat/lacking/ui/mvc"
 )
 
-func BootstrapApplication(window *ui.Window, gameController *game.Controller) {
+func BootstrapApplication(window *ui.Window, gameController *game.Controller, component co.Component) {
 	engine := gameController.Engine()
 	eventBus := mvc.NewEventBus()
 
 	scope := co.RootScope(window)
 	scope = co.TypedValueScope(scope, eventBus)
-	scope = co.TypedValueScope(scope, global.Context{
+	scope = co.TypedValueScope(scope, global.State{
 		Engine:      engine,
 		ResourceSet: engine.CreateResourceSet(),
 	})
-	co.Initialize(scope, co.New(Bootstrap, nil))
-}
-
-var Bootstrap = co.Define(&bootstrapComponent{})
-
-type bootstrapComponent struct {
-	co.BaseComponent
-}
-
-func (c *bootstrapComponent) Render() co.Instance {
-	return co.New(view.Application, nil)
+	co.Initialize(scope, co.New(component, nil))
 }

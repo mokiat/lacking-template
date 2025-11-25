@@ -11,7 +11,7 @@ import (
 	"github.com/mokiat/lacking-template/internal/ui/widget"
 )
 
-var LoadingScreen = co.Define(&loadingScreenComponent{})
+var LoadingScreen = co.Define[*loadingScreenComponent]()
 
 type LoadingScreenData struct {
 	AppModel     *model.ApplicationModel
@@ -23,9 +23,9 @@ type loadingScreenComponent struct {
 }
 
 func (c *loadingScreenComponent) OnCreate() {
-	screenData := co.GetData[LoadingScreenData](c.Properties())
-	appModel := screenData.AppModel
-	loadingModel := screenData.LoadingModel
+	componentData := co.GetData[LoadingScreenData](c.Properties())
+	appModel := componentData.AppModel
+	loadingModel := componentData.LoadingModel
 
 	state := loadingModel.State()
 	state.Promise.OnSuccess(func() {
