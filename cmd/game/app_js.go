@@ -3,8 +3,6 @@
 package main
 
 import (
-	"fmt"
-
 	jsapp "github.com/mokiat/lacking-js/app"
 	jsgame "github.com/mokiat/lacking-js/game"
 	jsui "github.com/mokiat/lacking-js/ui"
@@ -12,21 +10,23 @@ import (
 	"github.com/mokiat/lacking-template/internal/ui/view"
 	"github.com/mokiat/lacking-template/resources"
 	"github.com/mokiat/lacking/app"
+	"github.com/mokiat/lacking/core/resource"
 	"github.com/mokiat/lacking/game"
-	"github.com/mokiat/lacking/storage/chunked"
 	"github.com/mokiat/lacking/ui"
-	"github.com/mokiat/lacking/util/resource"
+	"github.com/mokiat/lacking/ui/resources/fonts"
+	"github.com/mokiat/lacking/ui/resources/icons"
 )
 
 func runApplication() error {
-	storage, err := chunked.NewWebStorage(".")
-	if err != nil {
-		return fmt.Errorf("failed to initialize storage: %w", err)
-	}
+	store := resource.NewWebStore(".")
 
-	locator := ui.WrappedLocator(resource.NewFSLocator(resources.UI))
+	locator := resource.OneOfLocator(
+		resource.SchemaLocator("ui", resource.NewFSStore(icons.FS)),
+		resource.SchemaLocator("ui", resource.NewFSStore(fonts.FS)),
+		resource.NewFSStore(resources.UI),
+	)
 
-	gameController := game.NewController(storage, jsgame.NewShaderCollection(), jsgame.NewShaderBuilder())
+	gameController := game.NewController(store, jsgame.NewShaderCollection(), jsgame.NewShaderBuilder())
 	uiController := ui.NewController(locator, jsui.NewShaderCollection(), func(w *ui.Window) {
 		gameui.BootstrapApplication(w, gameController, view.Application)
 	})
