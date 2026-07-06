@@ -3,7 +3,7 @@ name: Go
 on:
   push:
     tags: [ '*' ]
-    branches: [ 'master' ]
+    branches: [ '*' ]
 
 jobs:
   compile:
