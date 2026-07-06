@@ -93,8 +93,8 @@ github.com/mokiat/lacking v0.23.1-0.20260705171748-35b6d9b6812a h1:H4MF6LsI3P9bL
 github.com/mokiat/lacking v0.23.1-0.20260705171748-35b6d9b6812a/go.mod h1:xbJKIJszTKn4xCTwTLDmluJMsBqe5RCBURdhAPg/eHQ=
 github.com/mokiat/lacking-js v0.23.1-0.20260613102109-9fee9b8c0a27 h1:hXMvpIiGPwEh1GKdf5zIsFyIMcUOsZBkA/1AfOo/azU=
 github.com/mokiat/lacking-js v0.23.1-0.20260613102109-9fee9b8c0a27/go.mod h1:TLzTtJZxW8RlSMnOz3ZoQGPKcIyMdz97zp0hllNKDxY=
-github.com/mokiat/lacking-native v0.23.1-0.20260706190153-5e6e4f328f3b h1:B8mtQokQIE4IINuz12opCNjTYZ57EmJi8TwGgAeqEEE=
-github.com/mokiat/lacking-native v0.23.1-0.20260706190153-5e6e4f328f3b/go.mod h1:NnkW++TlcYViz2rAA+509BoWgh4jCk2gtA2vUsb+Zoo=
+github.com/mokiat/lacking-native v0.23.1-0.20260706200150-e85f3c95cec4 h1:U4vw/HaoQqhjZ/YmnVBqGAXxWBQUlyYezva1cUqNYh4=
+github.com/mokiat/lacking-native v0.23.1-0.20260706200150-e85f3c95cec4/go.mod h1:NnkW++TlcYViz2rAA+509BoWgh4jCk2gtA2vUsb+Zoo=
 github.com/mokiat/lacking-studio v0.23.1-0.20260706190540-756036c0ea8e h1:oY6r/0mF0NiLqovgK9fLPFKFbgzKoA3ODM1T0Gnb9fA=
 github.com/mokiat/lacking-studio v0.23.1-0.20260706190540-756036c0ea8e/go.mod h1:9DvGzwAozFH79TNkYMpAXKaWJJvbP2myc7XEqC5D+M8=
 github.com/mokiat/wasmal v0.3.0 h1:D16xIvRtVp71HdtiLMfrt/9YpCFqCjloenieWWdKeBk=
