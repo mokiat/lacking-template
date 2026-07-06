@@ -5,10 +5,10 @@ go 1.26
 require (
 	github.com/mokiat/gog v0.22.0
 	github.com/mokiat/gomath v0.17.0
-	github.com/mokiat/lacking v0.23.1-0.20260705171748-35b6d9b6812a
-	github.com/mokiat/lacking-js v0.23.1-0.20260613102109-9fee9b8c0a27
-	github.com/mokiat/lacking-native v0.23.1-0.20260706200150-e85f3c95cec4
-	github.com/mokiat/lacking-studio v0.23.1-0.20260706190540-756036c0ea8e
+	github.com/mokiat/lacking v0.23.1-0.20260706205948-6dd4f23e3523
+	github.com/mokiat/lacking-js v0.23.1-0.20260706211453-50bbedb0a111
+	github.com/mokiat/lacking-native v0.23.1-0.20260706211100-8aaf05404be9
+	github.com/mokiat/lacking-studio v0.23.1-0.20260706211819-8d0556cf5262
 )
 
 require (
