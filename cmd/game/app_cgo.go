@@ -12,19 +12,24 @@ import (
 	"github.com/mokiat/lacking-template/internal/ui/view"
 	"github.com/mokiat/lacking-template/resources"
 	"github.com/mokiat/lacking/app"
+	"github.com/mokiat/lacking/core/resource"
 	"github.com/mokiat/lacking/game"
-	"github.com/mokiat/lacking/storage/chunked"
 	"github.com/mokiat/lacking/ui"
-	"github.com/mokiat/lacking/util/resource"
+	"github.com/mokiat/lacking/ui/resources/fonts"
+	"github.com/mokiat/lacking/ui/resources/icons"
 )
 
 func runApplication() error {
-	storage, err := chunked.NewFileStorage("./assets")
+	storage, err := resource.NewFileStore("./assets")
 	if err != nil {
 		return fmt.Errorf("failed to initialize storage: %w", err)
 	}
 
-	locator := ui.WrappedLocator(resource.NewFSLocator(resources.UI))
+	locator := resource.OneOfLocator(
+		resource.SchemaLocator("ui", resource.NewFSStore(icons.FS)),
+		resource.SchemaLocator("ui", resource.NewFSStore(fonts.FS)),
+		resource.NewFSStore(resources.UI),
+	)
 
 	gameController := game.NewController(storage, nativegame.NewShaderCollection(), nativegame.NewShaderBuilder())
 	uiController := ui.NewController(locator, nativeui.NewShaderCollection(), func(w *ui.Window) {

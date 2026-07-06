@@ -8,6 +8,7 @@ import (
 	"github.com/mokiat/gomath/sprec"
 	"github.com/mokiat/lacking-template/internal/ui/global"
 	"github.com/mokiat/lacking-template/internal/ui/model"
+	"github.com/mokiat/lacking/core/spatial/shape3d"
 	"github.com/mokiat/lacking/debug/metric/metricui"
 	"github.com/mokiat/lacking/game"
 	"github.com/mokiat/lacking/game/graphics"
@@ -17,7 +18,6 @@ import (
 	co "github.com/mokiat/lacking/ui/component"
 	"github.com/mokiat/lacking/ui/layout"
 	"github.com/mokiat/lacking/ui/std"
-	"github.com/mokiat/lacking/util/shape3d"
 )
 
 var PlayScreen = co.Define[*playScreenComponent]()
