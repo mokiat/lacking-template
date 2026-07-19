@@ -13,7 +13,6 @@ import (
 	"github.com/mokiat/lacking/game"
 	"github.com/mokiat/lacking/game/graphics"
 	"github.com/mokiat/lacking/game/physics"
-	"github.com/mokiat/lacking/game/physics/acceleration"
 	"github.com/mokiat/lacking/ui"
 	co "github.com/mokiat/lacking/ui/component"
 	"github.com/mokiat/lacking/ui/layout"
@@ -143,14 +142,14 @@ func (c *playScreenComponent) createScene() *model.PlayScene {
 	ballModelNode := scene.Hierarchy().Wrap(ballModel.Root())
 
 	physicsScene := scene.Physics()
-	ballBodyDef := physicsScene.Engine().CreateBodyDefinition(physics.BodyDefinitionInfo{
+	ballBodyDef := physics.NewBodyDefinition(physics.BodyDefinitionInfo{
 		Mass:                   1.0,
 		MomentOfInertia:        physics.SolidSphereMomentOfInertia(1.0, 1.0),
 		FrictionCoefficient:    0.5,
 		RestitutionCoefficient: 0.5,
 		DragFactor:             0.1,
 		AngularDragFactor:      0.1,
-		CollisionGroup:         1,
+		CollisionRejectGroup:   physicsScene.NextCollisionRejectGroup(),
 		CollisionSpheres: []shape3d.Sphere{
 			shape3d.NewSphere(dprec.ZeroVec3(), 1.0),
 		},
@@ -164,7 +163,7 @@ func (c *playScreenComponent) createScene() *model.PlayScene {
 	ballBody.SetVelocity(dprec.NewVec3(0.0, 0.0, 3.0))
 	scene.BodyBindingSet().Bind(ballModelNode.ID(), ballBody)
 
-	physicsScene.CreateGlobalAccelerator(acceleration.NewGravityDirection())
+	physicsScene.CreateGlobalAccelerator(physics.NewGravitySolver())
 
 	return &model.PlayScene{
 		Scene: scene,
