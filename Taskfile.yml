@@ -23,12 +23,12 @@ tasks:
   webpack:
     desc: Prepare web assets for the game.
     cmds:
-      - mkdir -p 'assets/web'
-      - cp 'resources/ui/images/icon.png' 'assets/web/favicon.png'
-      - cp 'resources/web/main.css' 'assets/web/main.css'
-      - cp 'resources/web/main.js' 'assets/web/main.js'
-      - cp 'resources/web/index.html' 'assets/index.html'
-      - cp "$(go env GOROOT)/lib/wasm/wasm_exec.js" 'assets/web'
+      - mkdir -p './assets/web'
+      - cp 'resources/ui/images/icon.png' './assets/web/favicon.png'
+      - cp 'resources/web/main.css' './assets/web/main.css'
+      - cp 'resources/web/main.js' './assets/web/main.js'
+      - cp 'resources/web/index.html' './assets/index.html'
+      - cp "$(go env GOROOT)/lib/wasm/wasm_exec.js" './assets/web'
 
   wasm:
     desc: Build the game executable for the web.
@@ -46,16 +46,46 @@ tasks:
   debug:
     desc: Run the game in debug mode.
     cmds:
-      - go run -tags debug './cmd/game'
+      - go run -tags debug './cmd/game' {{.CLI_ARGS}}
 
   run:
     desc: Run the game.
     env:
       GODEBUG: cgocheck=0
     cmds:
-      - go run './cmd/game'
+      - go run './cmd/game' {{.CLI_ARGS}}
 
   web:
     desc: Run a web server to serve the game.
     cmds:
       - go run 'github.com/mokiat/httpserv@v1.0.0' -dir './assets' -host '127.0.0.1'
+
+  profile-cpu:
+    cmds:
+      - curl -o cpu.pprof 'http://localhost:6060/debug/pprof/profile?seconds=30'
+      - go tool pprof -symbolize=none cpu.pprof
+
+  profile-allocs:
+    cmds:
+      - curl -o mem.pprof 'http://localhost:6060/debug/pprof/allocs'
+      - go tool pprof -symbolize=none mem.pprof
+
+  profile-allocs-delta:
+    cmds:
+      - curl -o mem.pprof 'http://localhost:6060/debug/pprof/allocs?seconds=10'
+      - go tool pprof -symbolize=none mem.pprof
+
+  profile-heap:
+    cmds:
+      - curl -o mem.pprof 'http://localhost:6060/debug/pprof/heap'
+      - go tool pprof -symbolize=none mem.pprof
+
+  profile-heap-delta:
+    cmds:
+      - curl -o mem.pprof 'http://localhost:6060/debug/pprof/heap?seconds=10'
+      - go tool pprof -symbolize=none mem.pprof
+
+  trace:
+    cmds:
+      - curl -o trace.pprof 'http://localhost:6060/debug/pprof/trace?seconds=30'
+      - go tool trace trace.pprof
