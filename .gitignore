@@ -5,6 +5,6 @@
 /assets
 
 # Go
-trace.pprof
 cpu.pprof
 mem.pprof
+trace.pprof
