@@ -6,3 +6,5 @@
 
 # Go
 trace.pprof
+cpu.pprof
+mem.pprof
