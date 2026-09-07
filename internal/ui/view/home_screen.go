@@ -5,6 +5,7 @@ import (
 	"github.com/mokiat/gomath/sprec"
 	"github.com/mokiat/lacking/game"
 	"github.com/mokiat/lacking/game/graphics"
+	"github.com/mokiat/lacking/game/hierarchy"
 	"github.com/mokiat/lacking/ui"
 	co "github.com/mokiat/lacking/ui/component"
 	"github.com/mokiat/lacking/ui/layout"
@@ -142,7 +143,7 @@ func (c *homeScreenComponent) createScene() *model.HomeScene {
 	camera := c.createCamera(scene.Graphics())
 	scene.Graphics().SetActiveCamera(camera)
 
-	if cameraNode := sceneModel.FindNode("Camera"); !cameraNode.IsNil() {
+	if cameraNode := sceneModel.FindNode("Camera"); cameraNode != hierarchy.NilNodeID {
 		scene.CameraBindingSet().Bind(cameraNode, camera)
 	}
 

@@ -8,10 +8,12 @@ import (
 	"github.com/mokiat/gomath/sprec"
 	"github.com/mokiat/lacking-template/internal/ui/global"
 	"github.com/mokiat/lacking-template/internal/ui/model"
+	"github.com/mokiat/lacking/core/spatial/placement3d"
 	"github.com/mokiat/lacking/core/spatial/shape3d"
 	"github.com/mokiat/lacking/debug/metric/metricui"
 	"github.com/mokiat/lacking/game"
 	"github.com/mokiat/lacking/game/graphics"
+	"github.com/mokiat/lacking/game/hierarchy"
 	"github.com/mokiat/lacking/game/physics"
 	"github.com/mokiat/lacking/ui"
 	co "github.com/mokiat/lacking/ui/component"
@@ -129,7 +131,7 @@ func (c *playScreenComponent) createScene() *model.PlayScene {
 	camera := c.createCamera(scene.Graphics())
 	scene.Graphics().SetActiveCamera(camera)
 
-	if cameraNode := boardModel.FindNode("Camera"); !cameraNode.IsNil() {
+	if cameraNode := boardModel.FindNode("Camera"); cameraNode != hierarchy.NilNodeID {
 		scene.CameraBindingSet().Bind(cameraNode, camera)
 	}
 
@@ -139,31 +141,25 @@ func (c *playScreenComponent) createScene() *model.PlayScene {
 		Position:  opt.V(dprec.NewVec3(-1.0, 3.0, 2.0)),
 		IsDynamic: true,
 	})
-	ballModelNode := scene.Hierarchy().Wrap(ballModel.Root())
+	ballModelNode := scene.Hierarchy().Nodes().Handle(ballModel.Root())
 
 	physicsScene := scene.Physics()
-	ballBodyDef := physics.NewBodyDefinition(physics.BodyDefinitionInfo{
-		Mass:                   1.0,
-		MomentOfInertia:        physics.SolidSphereMomentOfInertia(1.0, 1.0),
+	ballBody := physicsScene.Bodies().CreateHandle(ballModelNode.Position(), ballModelNode.Rotation())
+	ballBody.SetMass(1.0)
+	ballBody.SetMomentOfInertia(physics.SolidSphereMomentOfInertia(1.0, 1.0))
+	ballBody.AttachCollisionSphere(physics.CollisionSphere{
+		Shape:                  shape3d.NewSphere(dprec.ZeroVec3(), 1.0),
 		FrictionCoefficient:    0.5,
 		RestitutionCoefficient: 0.5,
-		DragFactor:             0.1,
-		AngularDragFactor:      0.1,
-		CollisionRejectGroup:   physicsScene.NextCollisionRejectGroup(),
-		CollisionSpheres: []shape3d.Sphere{
-			shape3d.NewSphere(dprec.ZeroVec3(), 1.0),
+		Filtering: placement3d.FilterInfo{
+			RejectGroup: physicsScene.NextCollisionRejectGroup(),
 		},
 	})
-	ballBody := physicsScene.CreateBody(physics.BodyInfo{
-		Name:       "Ball",
-		Definition: ballBodyDef,
-		Position:   ballModelNode.Position(),
-		Rotation:   ballModelNode.Rotation(),
-	})
-	ballBody.SetVelocity(dprec.NewVec3(0.0, 0.0, 3.0))
-	scene.BodyBindingSet().Bind(ballModelNode.ID(), ballBody)
 
-	physicsScene.CreateGlobalAccelerator(physics.NewGravitySolver())
+	ballBody.SetVelocity(dprec.NewVec3(0.0, 0.0, 3.0))
+	scene.BodyBindingSet().Bind(ballModelNode.ID(), ballBody.ID())
+
+	physicsScene.GlobalAccelerators().Create(physics.NewGravitySolver())
 
 	return &model.PlayScene{
 		Scene: scene,
