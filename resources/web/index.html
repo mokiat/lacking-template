@@ -20,9 +20,17 @@
   <article>
     <div id="loading">
       <h2>Preparing game...</h2>
-      <div class="loader-holder">
-        <i class="loader"></i>
+      <div class="loader">
+        <i></i>
+        <i></i>
+        <i></i>
       </div>
+      <p id="status">Connecting...</p>
+    </div>
+    <div id="error">
+      <h2>Failed to load the game</h2>
+      <p id="error-message"></p>
+      <button onclick="location.reload()">Try again</button>
     </div>
     <div id="finished">
       <h2>Thanks for playing!</h2>
