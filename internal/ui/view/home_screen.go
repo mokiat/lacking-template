@@ -4,6 +4,7 @@ import (
 	"github.com/mokiat/gog/opt"
 	"github.com/mokiat/gomath/sprec"
 	"github.com/mokiat/lacking/game"
+	"github.com/mokiat/lacking/game/animation"
 	"github.com/mokiat/lacking/game/graphics"
 	"github.com/mokiat/lacking/game/hierarchy"
 	"github.com/mokiat/lacking/ui"
@@ -149,9 +150,9 @@ func (c *homeScreenComponent) createScene() *model.HomeScene {
 
 	const animationName = "CameraRotation"
 	if recording := sceneModel.FindRecording(animationName); recording != nil {
-		playback := recording.Playback(true)
-		player := sceneModel.BindAnimation(playback)
-		scene.PlayAnimation(player)
+		playback := animation.NewClipNode(sceneModel.Skeleton(), recording, true)
+		sceneModel.BindAnimation(playback)
+		scene.PlayAnimation(playback)
 	}
 
 	return &model.HomeScene{
